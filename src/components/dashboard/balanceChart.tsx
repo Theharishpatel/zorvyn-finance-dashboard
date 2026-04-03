@@ -1,0 +1,106 @@
+"use client"
+import { useState, useMemo } from "react"
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button" // Assuming Shadcn button setup
+import { MOCK_DATA } from "@/lib/mockData";
+
+// Custom black tooltip to match Image 1
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="bg-foreground border border-slate-700 p-3 rounded-md text-xs text-background">
+        <p className="font-semibold mb-1">{data.displayDate}</p>
+        <div className="flex gap-3">
+          <p><span className="inline-block w-2 h-2 rounded-full bg-[#1e40af] mr-1"></span> Income</p>
+          <p className="font-mono">{payload[0].value.toLocaleString('en-IN')}</p>
+        </div>
+        <div className="flex gap-3">
+          <p><span className="inline-block w-2 h-2 rounded-full bg-[#525252] mr-1"></span> Expense</p>
+          <p className="font-mono">{payload[1].value.toLocaleString('en-IN')}</p>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+export function BalanceChart() {
+  const [range, setRange] = useState<'7D' | '30D' | '3M'>('3M');
+
+  const filteredData = useMemo(() => {
+    const days = range === '7D' ? 7 : range === '30D' ? 30 : 90;
+    return MOCK_DATA.analytics.timeline.slice(-days);
+  }, [range]);
+
+  return (
+    <Card className="col-span-4 border-none bg-card/50 backdrop-blur-sm p-6 text-white rounded-2xl">
+      {/* Target Image Header & Filters */}
+      <div className="flex justify-between items-center mb-6">
+        <CardHeader>
+          <CardTitle className="text-xl text-muted-foreground font-semibold">Financial Trend</CardTitle>
+          {/* <p className="text-sm text-slate-400">Layered income vs expense data</p> */}
+        </CardHeader>
+        <div className="flex gap-2 text-foreground bg-background border border-slate-700 rounded-lg p-1 text-sm">
+          {['7D', '30D', '3M'].map(f => (
+            <Button
+              key={f}
+              onClick={() => setRange(f as any)}
+              variant={range === f ? "secondary" : "ghost"}
+              className={`h-7 text-xs  rounded-md ${range === f ? 'bg-foreground text-background' : ''}`}
+            >
+              Last {f === '7D' ? '7 days' : f === '30D' ? '30 days' : '3 months'}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <ResponsiveContainer width="100%" height={300}>
+        <AreaChart data={filteredData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+          {/* Subtle grid lines matching image 1 */}
+          <CartesianGrid strokeDasharray="1 1" strokeOpacity={0.1} vertical={false} stroke="#2a2a2a" />
+          
+          <XAxis 
+            dataKey="axisLabel" 
+            tick={{ fill: '#64748b' }} 
+            axisLine={false} 
+            tickLine={false} 
+            fontSize={10}
+            interval={0}
+          />
+          
+          <YAxis hide={true} domain={[0, 'auto']} />
+
+          {/* Premium black Tooltip with custom active dots */}
+          <Tooltip 
+            content={<CustomTooltip />} 
+            cursor={{ stroke: '#555', strokeWidth: 1 }} 
+          />
+          
+          {/* LAYER 1: Income (Top Blue Area) */}
+          <Area 
+            type="monotone" // Smooth, curved lines
+            dataKey="income" // Use Income key
+            stackId="1" // CRITICAL: This enables stacking
+            stroke="#5f5b5b" // Deep blue stroke
+            fill="#5f5b5b" // Deep blue fill
+            fillOpacity={0.6} // Reduced opacity like image 1
+            activeDot={{ r: 4, stroke: 'white', strokeWidth: 2, fill: '#1e40af' }}
+          />
+          
+          {/* LAYER 2: Expense (Bottom Gray Area) */}
+          <Area 
+            type="monotone" 
+            dataKey="expense" 
+            stackId="1" // CRITICAL: Same stackId value
+            stroke="#525252" // Deep gray stroke
+            fill="#525252" // Deep gray fill
+            fillOpacity={0.4} 
+            activeDot={{ r: 4, stroke: 'white', strokeWidth: 2, fill: '#525252' }}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </Card>
+  )
+}

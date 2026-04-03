@@ -52,7 +52,7 @@ export function MobileHeader() {
               <Menu className="w-6 h-6" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-64 border-none bg-sidebar">
+          <SheetContent side="left" className="p-0 w-64 border-none bg-background">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <SheetDescription className="sr-only">Zorvyn Menu</SheetDescription>
             <Sidebar />

@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
 
         {/* DESKTOP SIDEBAR */}
-        <aside className="hidden lg:flex w-64 border-r bg-sidebar">
+        <aside className="hidden lg:flex w-64 border-r ">
           <Sidebar />
         </aside>
 

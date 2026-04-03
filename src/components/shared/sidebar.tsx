@@ -7,11 +7,12 @@ import { Receipt } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+
 export function Sidebar({className}:{className?: string}){
     const pathname = usePathname();
 
     return (
-        <div className={cn("flex h-full w-full flex-col bg-sidebar text-sidebar-foreground", className)}>
+        <div className={cn("flex h-full w-full flex-col bg-background text-sidebar-foreground", className)}>
             <div className="p-6 flex items-center gap-2">
                 
                 {/* <span className="text-xl font-bold tracking-tight">Zorvyn</span> */}
@@ -39,6 +40,7 @@ export function Sidebar({className}:{className?: string}){
                 })}
 
             </nav>
+            
                 <div className="p-4 border-t borader-sidebar-border">
                     {/* Role Switcher placeholder add later */}
                     <div className="text-xs opacity-50 px-3">Role : Viewer</div>

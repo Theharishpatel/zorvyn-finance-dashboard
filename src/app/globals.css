@@ -103,3 +103,15 @@
     @apply antialiased;
   } 
 }
+
+
+.custom-scrollbar::-webkit-scrollbar {
+  height: 5px; /* Horizontal scrollbar ki height */
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.2);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}

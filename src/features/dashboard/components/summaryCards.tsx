@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MOCK_DATA } from "@/lib/mockData";
+
 import { Wallet, TrendingUp, TrendingDown, PiggyBank } from "lucide-react";
 
 const icons = { primary: Wallet, success: TrendingUp, destructive: TrendingDown, blue: PiggyBank };

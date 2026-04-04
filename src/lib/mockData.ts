@@ -1,4 +1,3 @@
-
 // Helper to generate dates
 const generateTimeSeriesData = (days: number) => {
   const points = [];
@@ -10,21 +9,77 @@ const generateTimeSeriesData = (days: number) => {
       dateObj: d,
       displayDate: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
       axisLabel: d.getDate() === 1 || d.getDate() === 15 ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '',
-      // Separate keys needed for stacked areas (like image 1)
-      income: 30000 + Math.floor(Math.random() * 20000), // Larger layered value
-      expense: 10000 + Math.floor(Math.random() * 10000), // Smaller baseline value
+      income: 30000 + Math.floor(Math.random() * 20000),
+      expense: 10000 + Math.floor(Math.random() * 10000),
     });
   }
   return points;
 };
 
+// 🔥 NEW: Random Transactions Generator
+const generateTransactions = (count: number) => {
+  const merchants = [
+    "Starbucks India",
+    "Amazon",
+    "Flipkart",
+    "Swiggy",
+    "Zomato",
+    "Uber",
+    "Netflix",
+    "AWS Cloud",
+    "Electricity Bill",
+    "Salary Credit"
+  ];
+
+  const categories = ["Food", "Shopping", "Travel", "Bills", "Entertainment", "Income"];
+  const paymentMethods = [
+    "UPI (HDFC Bank)",
+    "Credit Card (....8821)",
+    "Debit Card",
+    "NEFT",
+    "Cash"
+  ];
+
+  const transactions = [];
+
+  for (let i = 0; i < count; i++) {
+    const isIncome = Math.random() > 0.7;
+
+    const date = new Date();
+    date.setDate(date.getDate() - Math.floor(Math.random() * 30));
+
+    transactions.push({
+      id: `tx_${String(i + 1).padStart(3, "0")}`,
+      date: date.toISOString().split("T")[0],
+      merchant: isIncome ? "Salary Credit" : merchants[Math.floor(Math.random() * merchants.length)],
+      category: isIncome ? "Income" : categories[Math.floor(Math.random() * (categories.length - 1))],
+      amount: isIncome
+        ? 30000 + Math.floor(Math.random() * 50000)
+        : 100 + Math.floor(Math.random() * 5000),
+      type: isIncome ? "income" : "expense",
+      status: Math.random() > 0.1 ? "Completed" : "Pending",
+      paymentMethod: paymentMethods[Math.floor(Math.random() * paymentMethods.length)],
+      isRecurring: Math.random() > 0.7,
+      aiLabels: isIncome
+        ? ["Monthly Primary"]
+        : ["Frequent Spend", Math.random() > 0.5 ? "High Usage" : ""].filter(Boolean),
+      audit: {
+        createdBy: "System",
+        modifiedBy: "system",
+        modifiedAt: new Date().toISOString()
+      }
+    });
+  }
+
+  return transactions;
+};
 
 export const MOCK_DATA = {
   user: {
     name: "Harry Patel",
     email: "harish.p@zorvyn.com",
     avatar: "/avatars/harish.png",
-    role: "admin", // Toggle ke liye: 'admin' | 'viewer'
+    role: "admin",
     joinedDate: "2026-01-15",
     preferences: {
       currency: "INR",
@@ -33,7 +88,6 @@ export const MOCK_DATA = {
     }
   },
 
-  //  Summary Cards Section
   summary: [
     { id: "s1", label: "TOTAL BALANCE", value: 54250.00, change: "+5.2%", trend: "up", color: "primary" },
     { id: "s2", label: "INCOME", value: 85000.00, change: "+12.1%", trend: "up", color: "success" },
@@ -41,9 +95,8 @@ export const MOCK_DATA = {
     { id: "s4", label: "SAVINGS", value: 24250.00, goal: 30000, progress: 78, color: "blue" }
   ],
 
-  //  Analytics & Visualization
   analytics: {
-    timeline: generateTimeSeriesData(90), 
+    timeline: generateTimeSeriesData(90),
     spendingBreakdown: [
       { category: "Food", percentage: 25, color: "oklch(0.65 0.22 41)" },
       { category: "Rent", percentage: 35, color: "oklch(0.60 0.12 185)" },
@@ -53,53 +106,7 @@ export const MOCK_DATA = {
     ]
   },
 
-  // Transactions (Detailed View)
-  transactions: [
-    {
-      id: "tx_001",
-      date: "2026-04-01",
-      merchant: "Starbucks India",
-      category: "Food",
-      amount: 120.50,
-      type: "expense",
-      status: "Completed",
-      paymentMethod: "UPI (HDFC Bank)",
-      isRecurring: false,
-      aiLabels: ["Frequent Spend"],
-      audit: { createdBy: "System", modifiedBy: "admin_harish", modifiedAt: "2026-04-01T10:00:00Z" }
-    },
-    {
-      id: "tx_002",
-      date: "2026-03-31",
-      merchant: "Salary Credit",
-      category: "Income",
-      amount: 45000.00,
-      type: "income",
-      status: "Completed",
-      paymentMethod: "NEFT",
-      isRecurring: true,
-      aiLabels: ["Monthly Primary"],
-      audit: { createdBy: "Zorvyn_HR", modifiedBy: "system", modifiedAt: "2026-03-31T09:00:00Z" }
-    },
-    {
-      id: "tx_003",
-      date: "2026-04-02",
-      merchant: "AWS Cloud",
-      category: "Bills",
-      amount: 2450.00,
-      type: "expense",
-      status: "Pending",
-      paymentMethod: "Credit Card (....8821)",
-      isRecurring: true,
-      aiLabels: ["Critical Subscription", "High Usage"],
-      audit: { createdBy: "System", modifiedBy: "n/a", modifiedAt: "2026-04-02T14:30:00Z" }
-    }
-  ],
+  // 🔥 UPDATED: Dynamic Transactions
+  transactions: generateTransactions(1000),
 
-//   // PPO Feature: AI Insights (GapMatch-AI Integration hint)
-//   aiInsights: [
-//     { id: "i1", text: "You could save ₹500 by cancelling unused subscriptions.", type: "saving" },
-//     { id: "i2", text: "Estimated balance at month-end: ₹62,000 based on your spending history.", type: "forecast" },
-//     { id: "i3", text: "Cloud Services spending is 15% higher than last month.", type: "alert" }
-//   ]
 };

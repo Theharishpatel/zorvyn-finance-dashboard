@@ -13,9 +13,13 @@ import {
 
 import { DataTableToolbar } from "./tableToolbar";
 import { DataTablePagination } from "./tablePagination";
-import { Transaction } from "@/types";
+import { Transaction } from "@/features/transactions/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { useTransactionExport, useTransactionTable } from "../hooks/useTransaction";
+import {
+  useTransactionExport,
+  useTransactionTable,
+} from "../hooks/useTransaction";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 export function DataTable({
   columns,
@@ -28,8 +32,12 @@ export function DataTable({
   showToolbar?: boolean;
   showPagination?: boolean;
 }) {
-  const { table, date, setDate, isLoading } = useTransactionTable(columns, initialData);
+  const { table, date, setDate, isLoading } = useTransactionTable(
+    columns,
+    initialData,
+  );
   const { handleExport } = useTransactionExport(table);
+  const {role} = useAuthStore();
 
   if (isLoading) return <DataTableSkeleton />;
 
@@ -38,11 +46,11 @@ export function DataTable({
       {/* TOOLBAR: Responsive padding */}
       {showToolbar && (
         <div className="px-1 overflow-x-auto pb-2 md:pb-0">
-          <DataTableToolbar 
-            table={table} 
-            date={date} 
-            setDate={setDate} 
-            onExport={handleExport} 
+          <DataTableToolbar
+            table={table}
+            date={date}
+            setDate={setDate}
+            onExport={handleExport}
           />
         </div>
       )}
@@ -60,7 +68,10 @@ export function DataTable({
           <Table className="min-w-[850px] w-full border-collapse">
             <TableHeader className="bg-muted/50 sticky top-0 z-10">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="hover:bg-transparent border-border/40">
+                <TableRow
+                  key={headerGroup.id}
+                  className="hover:bg-transparent border-border/40"
+                >
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
@@ -70,14 +81,14 @@ export function DataTable({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   ))}
                 </TableRow>
               ))}
             </TableHeader>
-            
+
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
@@ -86,13 +97,13 @@ export function DataTable({
                     className="border-border/20 hover:bg-primary/[0.02] transition-colors"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell 
-                        key={cell.id} 
+                      <TableCell
+                        key={cell.id}
                         className="py-4 px-4 align-middle whitespace-nowrap"
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </TableCell>
                     ))}
@@ -100,7 +111,10 @@ export function DataTable({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className="h-40 text-center">
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-40 text-center"
+                  >
                     No results found.
                   </TableCell>
                 </TableRow>

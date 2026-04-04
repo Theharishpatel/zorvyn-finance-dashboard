@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu } from "lucide-react";
+import { Bell, Menu } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -46,6 +46,12 @@ export function MobileHeader() {
 
       <div className="flex items-center gap-1">
         <ThemeToggle />
+        <div className="relative cursor-pointer hover:opacity-80 transition-opacity">
+          <Bell className="h-5 w-5 text-muted-foreground" />
+          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground font-bold">
+            3
+          </span>
+        </div>
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon">

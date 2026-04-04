@@ -25,7 +25,7 @@ export function SummaryCards() {
                     <span>{item.progress}% Filled</span>
                   </div>
                   <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                    <div className={`h-full bg-blue-500`} style={{ width: `${item.progress}%` }} />
+                    <div className={`h-full bg-foreground`} style={{ width: `${item.progress}%` }} />
                   </div>
                 </div>
               ) : (

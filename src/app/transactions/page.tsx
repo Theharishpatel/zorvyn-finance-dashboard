@@ -1,9 +1,7 @@
-import {
-  columns
-} from "@/features/transactions/components/columns";
+import { columns } from "@/features/transactions/components/columns";
 import { DataTable } from "@/features/transactions/components/dataTable";
 import { MOCK_DATA } from "@/lib/mockData";
-import {Transaction} from '@/types'
+import { Transaction } from "@/features/transactions/types";
 export default function TransactionsPage() {
   return (
     <div className="container mx-auto py-10 px-4 md:px-8">
@@ -16,9 +14,7 @@ export default function TransactionsPage() {
         </p>
       </div>
 
-      <DataTable
-        columns={columns}
-      />
+      <DataTable columns={columns} />
     </div>
   );
 }

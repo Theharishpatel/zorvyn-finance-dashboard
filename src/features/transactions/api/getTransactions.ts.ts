@@ -1,5 +1,5 @@
 import { MOCK_DATA } from "@/lib/mockData";
-import { Transaction } from "@/types";
+import { Transaction } from "@/features/transactions/types";
 
 export const getTransactions = async (): Promise<Transaction[]> => {
   return new Promise((resolve) => {

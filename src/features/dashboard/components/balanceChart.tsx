@@ -4,6 +4,7 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button" // Assuming Shadcn button setup
 import { MOCK_DATA } from "@/lib/mockData";
+import { cn } from "@/lib/utils"
 
 // Custom black tooltip to match Image 1
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -35,23 +36,28 @@ export function BalanceChart() {
   }, [range]);
 
   return (
-    <Card className="col-span-4 border-none bg-card/50 backdrop-blur-sm p-6 text-white rounded-2xl">
+    <Card className="col-span-4 border-none bg-card/50 backdrop-blur-sm p-4 sm:p-6 text-white rounded-2xl h-full">
       {/* Target Image Header & Filters */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <CardHeader>
-          <CardTitle className="text-xl text-muted-foreground font-semibold">Financial Trend</CardTitle>
-          {/* <p className="text-sm text-slate-400">Layered income vs expense data</p> */}
+          <CardTitle className="text-lg sm:text-xl text-muted-foreground font-semibold">Financial Trend</CardTitle>
+          
         </CardHeader>
-        <div className="flex gap-2 text-foreground bg-background border border-slate-700 rounded-lg p-1 text-sm">
-          {['7D', '30D', '3M'].map(f => (
-            <Button
+        {/* Responsive Toggle Group */}
+        <div className="flex items-center gap-1 bg-muted/40 p-1 rounded-xl w-full sm:w-auto border border-border/20">
+          {['7D', '30D', '3M'].map((f) => (
+            <button
               key={f}
               onClick={() => setRange(f as any)}
-              variant={range === f ? "secondary" : "ghost"}
-              className={`h-7 text-xs  rounded-md ${range === f ? 'bg-foreground text-background' : ''}`}
+              className={cn(
+                "flex-1 sm:flex-none px-3 py-1.5 text-[10px] font-bold rounded-lg transition-all",
+                range === f 
+                  ? "bg-background text-foreground shadow-sm ring-1 ring-border/50" 
+                  : "text-muted-foreground hover:text-foreground"
+              )}
             >
-              Last {f === '7D' ? '7 days' : f === '30D' ? '30 days' : '3 months'}
-            </Button>
+              {f}
+            </button>
           ))}
         </div>
       </div>

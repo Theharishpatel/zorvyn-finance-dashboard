@@ -4,7 +4,8 @@ import * as React from "react"
 import { Search, Bell, UserCircle } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { MOCK_DATA } from "@/lib/mockData"
-import { ThemeToggle } from "../shared/themeToggle"
+import { ThemeToggle } from "@/components/shared/themeToggle"
+
 
 
 export function DashboardHeader() {

@@ -163,9 +163,7 @@ src/
 
 ## 📸 Screenshots
 
-
-```
-![Dashboard Dark Desktop](/public/screenshots/dashboard-desktop-dark.png)
+![Dashboard Dark Desktop](public/screenshots/dashboard-desktop-dark.png)
 ![Dashboard light Desktop](/public/screenshots/dashboard-desktop-light.png)
 ![Dashboard Dark Mobile](/public/screenshots/dashboard-mobile-dark.png)
 ![Dashboard Dark Mobile](/public/screenshots/sidebar-mobile-dark.png)
@@ -176,7 +174,6 @@ src/
 ![Dashboard light Mobile](/public/screenshots/transactions-mobile-light.png)
 ![Dashboard Dark Mobile](/public/screenshots/userswitcher-mobile.png)
 
-```
 
 ---
 

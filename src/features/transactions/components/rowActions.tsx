@@ -97,7 +97,7 @@ export function RowActions({ row, table }: { row: Row<Transaction>; table: Table
             <Pencil className="h-4 w-4" />
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] backdrop-blur-xl">
           <DialogHeader>
             <DialogTitle>Edit Transaction</DialogTitle>
             <DialogDescription>Update merchant or amount below.</DialogDescription>
@@ -142,7 +142,7 @@ export function RowActions({ row, table }: { row: Row<Transaction>; table: Table
             <Trash2 className="h-4 w-4" />
           </Button>
         </AlertDialogTrigger>
-        <AlertDialogContent>
+        <AlertDialogContent className="backdrop-blur-xl">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>

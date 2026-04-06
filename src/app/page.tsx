@@ -1,6 +1,7 @@
 "use client"
 
 import { AnalyticsSection } from "@/features/dashboard/components/analytcsDashboard";
+import { InsightsSection } from "@/features/dashboard/components/insightsSection";
 import { SummaryCards } from "@/features/dashboard/components/summaryCards";
 import { columns } from "@/features/transactions/components/columns";
 import { DataTable } from "@/features/transactions/components/dataTable";
@@ -35,6 +36,7 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-8 p-6 md:p-10 pt-6 w-full mx-auto max-w-[1600px] animate-in fade-in duration-500">
       <SummaryCards />
+      <InsightsSection data={allTransactions}/>
       <AnalyticsSection />
       
       <div className="space-y-4">

@@ -145,7 +145,7 @@ export function DataTableToolbar<TData>({
                   <span className="hidden md:inline">Add Transaction</span>
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
+              <DialogContent className="sm:max-w-[425px] backdrop-blur-xl">
                 <DialogHeader>
                   <DialogTitle>Add New Transaction</DialogTitle>
                 </DialogHeader>

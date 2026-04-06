@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { DataTableToolbar } from "./tableToolbar";
 import { DataTablePagination } from "./tablePagination";
@@ -36,7 +37,7 @@ export function DataTable({
   showToolbar?: boolean;
   showPagination?: boolean;
 }) {
-  // ✅ Hook se 'table' ke saath filters bhi nikalo
+ 
   const { table, date, setDate, isLoading } = useTransactionTable(
     columns,
     initialData,
@@ -45,7 +46,7 @@ export function DataTable({
   const { handleExport } = useTransactionExport(table);
   const { role } = useAuthStore();
 
-  // Filter state access karne ke liye (Empty state logic)
+  // Filter state to access (Empty state logic)
   const isFiltered = table.getState().columnFilters.length > 0 || !!table.getState().globalFilter;
 
   if (isLoading) return <DataTableSkeleton />;
@@ -63,14 +64,14 @@ export function DataTable({
         </div>
       )}
 
-      <div className="relative rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm shadow-sm">
+      <div className="relative rounded-2xl border border-border/40 bg-card/30 backdrop-blur-md shadow-sm overflow-hidden">
         <div className="overflow-x-auto custom-scrollbar">
           <Table className="min-w-[850px] w-full border-collapse">
-            <TableHeader className="bg-muted/50 sticky top-0 z-10">
+            <TableHeader className="bg-muted/30 sticky top-0 z-10 backdrop-blur-md">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id} className="hover:bg-transparent border-border/40">
                   {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} className="h-12 px-4 text-[11px] uppercase font-bold text-muted-foreground tracking-tight">
+                    <TableHead key={header.id} className="h-14 px-6 text-[10px] uppercase font-black text-muted-foreground/60 tracking-[0.1em]">
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   ))}
@@ -79,45 +80,68 @@ export function DataTable({
             </TableHeader>
 
             <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} className="border-border/20 hover:bg-primary/[0.02] transition-colors">
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="py-4 px-4 align-middle whitespace-nowrap">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
+              <AnimatePresence mode="popLayout">
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row, index) => (
+                    
+                    <motion.tr
+                      key={row.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.98 }}
+                      transition={{ 
+                        duration: 0.3, 
+                        delay: index * 0.03, 
+                        ease: "easeOut" 
+                      }}
+                      className="group border-border/20 hover:bg-primary/[0.03] transition-colors cursor-default"
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id} className="py-4 px-6 align-middle whitespace-nowrap">
+                          <div className="transition-transform duration-300 group-hover:translate-x-1">
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </div>
+                        </TableCell>
+                      ))}
+                    </motion.tr>
+                  ))
+                ) : (
+                  
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="h-[500px] text-center border-none">
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="flex flex-col items-center justify-center py-20"
+                      >
+                        <div className="relative mb-8">
+                          <div className="absolute inset-0 bg-muted/20 rounded-full blur-3xl animate-pulse" />
+                          <div className="relative bg-muted/40 p-8 rounded-full ring-1 ring-border/50">
+                            <SearchX className="h-16 w-16 text-muted-foreground/30" />
+                          </div>
+                        </div>
+                        <h3 className="text-2xl font-black tracking-tight text-foreground">No matches found</h3>
+                        <p className="text-sm text-muted-foreground max-w-[340px] mx-auto mt-3 font-medium leading-relaxed">
+                          {isFiltered 
+                            ? "We couldn't find anything for your current filters. Maybe try something broader?" 
+                            : "Your financial history looks a bit quiet. Time to add some data!"}
+                        </p>
+                        
+                        {isFiltered && (
+                          <Button 
+                            variant="outline" 
+                            size="lg" 
+                            className="mt-8 font-bold h-11 px-8 rounded-xl gap-2 border-border/50 hover:bg-muted hover:scale-105 transition-all active:scale-95"
+                            onClick={() => table.resetColumnFilters()}
+                          >
+                            <XCircle className="h-4 w-4" /> Clear All Filters
+                          </Button>
+                        )}
+                      </motion.div>
+                    </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                /* --- 🚀 ENHANCED EMPTY STATE --- */
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-[450px] text-center border-none">
-                    <div className="flex flex-col items-center justify-center py-20 animate-in fade-in zoom-in duration-500">
-                      <div className="bg-muted/30 p-6 rounded-full mb-6 ring-8 ring-muted/10">
-                        <SearchX className="h-12 w-12 text-muted-foreground/40" />
-                      </div>
-                      <h3 className="text-xl font-bold tracking-tight text-foreground">No Transactions Found</h3>
-                      <p className="text-sm text-muted-foreground max-w-[320px] mx-auto mt-2 leading-relaxed">
-                        {isFiltered 
-                          ? "We couldn't find any results matching your current filters. Try adjusting your search." 
-                          : "Your transaction list is currently empty. Start by adding a new record!"}
-                      </p>
-                      
-                      {isFiltered && (
-                        <Button 
-                          variant="secondary" 
-                          size="sm" 
-                          className="mt-6 font-bold h-9 px-4 gap-2 border border-border/50 hover:bg-muted"
-                          onClick={() => table.resetColumnFilters()}
-                        >
-                          <XCircle className="h-4 w-4" /> Reset All Filters
-                        </Button>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
+                )}
+              </AnimatePresence>
             </TableBody>
           </Table>
         </div>

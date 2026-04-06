@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Row, Table } from "@tanstack/react-table"; // Table import zaroori hai
-import { Pencil, Trash2, Save } from "lucide-react";
+import { Row, Table } from "@tanstack/react-table";
+import { Pencil, Trash2, Save, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { Transaction } from "../types";
+import { toast } from "sonner"; // ✅ Toast Import
 
 // UI Components
 import {
@@ -32,7 +33,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-// Props mein 'table' add kiya hai
 export function RowActions({ row, table }: { row: Row<Transaction>; table: Table<Transaction> }) {
   const { role } = useAuthStore();
   const transaction = row.original;
@@ -42,9 +42,9 @@ export function RowActions({ row, table }: { row: Row<Transaction>; table: Table
 
   if (role !== "admin") return null;
 
-  // Logic to access meta functions
   const meta = table.options.meta as any;
 
+  // --- 1. HANDLE UPDATE WITH TOAST ---
   const handleUpdate = () => {
     if (!meta) return;
     
@@ -54,20 +54,43 @@ export function RowActions({ row, table }: { row: Row<Transaction>; table: Table
         : item
     );
 
-    meta.updateData(updatedData); // State aur LocalStorage sync yahan se hoga
+    meta.updateData(updatedData);
+
+    // ✅ Success Toast for Update
+    toast.success("Transaction Updated", {
+      description: `Successfully updated ${merchant} to ₹${amount}.`,
+    });
   };
 
+  // --- 2. HANDLE DELETE WITH UNDO TOAST ---
   const handleDelete = () => {
     if (!meta) return;
     
+    const oldData = [...meta.allData]; // Backup for Undo
     const filteredData = meta.allData.filter((item: Transaction) => item.id !== transaction.id);
+    
     meta.updateData(filteredData);
+
+    // ✅ Error/Destructive Toast for Delete with Undo Action
+    toast.error("Transaction Deleted", {
+      description: `${transaction.merchant} has been removed from your records.`,
+      action: {
+        label: "Undo",
+        onClick: () => {
+          meta.updateData(oldData);
+          toast.success("Restored!", { 
+            description: "The transaction has been successfully restored.",
+            icon: <Undo2 className="h-4 w-4" /> 
+          });
+        },
+      },
+    });
   };
 
   return (
     <div className="flex items-center gap-1">
       
-      {/* --- 1. EDIT POPUP --- */}
+      {/* --- EDIT POPUP --- */}
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-500 hover:text-blue-600 hover:bg-blue-50">
@@ -104,7 +127,7 @@ export function RowActions({ row, table }: { row: Row<Transaction>; table: Table
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button onClick={handleUpdate} className="w-full sm:w-auto gap-2">
+              <Button onClick={handleUpdate} className="w-full sm:w-auto gap-2 font-bold">
                 <Save className="h-4 w-4" /> Save Changes
               </Button>
             </DialogClose>
@@ -112,7 +135,7 @@ export function RowActions({ row, table }: { row: Row<Transaction>; table: Table
         </DialogContent>
       </Dialog>
 
-      {/* --- 2. DELETE CONFIRMATION --- */}
+      {/* --- DELETE CONFIRMATION --- */}
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button variant="ghost" size="icon" className="h-8 w-8 text-rose-500 hover:text-rose-600 hover:bg-rose-50">
@@ -123,14 +146,15 @@ export function RowActions({ row, table }: { row: Row<Transaction>; table: Table
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              Delete transaction for **{transaction.merchant}**? This action is permanent.
+              Delete transaction for <span className="font-bold text-foreground">{transaction.merchant}</span>? 
+              This action is permanent but can be undone via notification.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="font-semibold">Cancel</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleDelete} 
-              className="bg-rose-500 hover:bg-rose-600"
+              className="bg-rose-500 hover:bg-rose-600 font-bold"
             >
               Confirm Delete
             </AlertDialogAction>
@@ -141,3 +165,4 @@ export function RowActions({ row, table }: { row: Row<Transaction>; table: Table
     </div>
   );
 }
+

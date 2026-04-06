@@ -10,9 +10,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 
 export function UserSwitcher() {
   const { role, setRole, name } = useAuthStore();
+
+  const handleRoleChange = (newRole: "admin" | "viewer") => {
+    if (role === newRole) return; 
+
+    setRole(newRole);
+
+    // 🔥 Premium Toast Notification
+    toast.success(`Access Updated`, {
+      description: `You are now browsing as ${newRole.toUpperCase()}`,
+      duration: 3000,
+    });
+  };
 
   return (
     <DropdownMenu >
@@ -23,6 +36,10 @@ export function UserSwitcher() {
               <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center overflow-hidden ring-2 ring-transparent group-hover:ring-primary/20 transition-all">
                 <UserCircle className="h-8 w-8 text-muted-foreground" />
               </div>
+              <div className={cn(
+                "absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-background shadow-sm transition-all duration-500",
+                role === "admin" ? "bg-emerald-500 scale-110" : "bg-slate-400 scale-100"
+              )} />
               {/* Role Indicator Dot */}
               <div className={cn(
                 "absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-background shadow-sm transition-colors",
@@ -50,7 +67,7 @@ export function UserSwitcher() {
         </div>
         
         <DropdownMenuItem 
-          onClick={() => setRole("admin")} 
+          onClick={() => handleRoleChange("admin")}
           className={cn(
             "flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors",
             role === "admin" ? "bg-emerald-500/10 text-emerald-600" : "focus:bg-emerald-500/5"
@@ -66,7 +83,7 @@ export function UserSwitcher() {
         </DropdownMenuItem>
         
         <DropdownMenuItem 
-          onClick={() => setRole("viewer")} 
+          onClick={() => handleRoleChange("viewer")}
           className={cn(
             "flex items-center gap-3 p-3 rounded-xl cursor-pointer mt-1 transition-colors",
             role === "viewer" ? "bg-slate-500/10 text-slate-600" : "focus:bg-slate-500/5"

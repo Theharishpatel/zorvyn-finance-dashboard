@@ -55,6 +55,7 @@ export function InsightsSection({ data }: { data: Transaction[] }) {
           subtitle="Save ~₹1,500/week"
           icon={Lightbulb}
           color="blue"
+          
         />
       </div>
     </div>
@@ -69,12 +70,9 @@ function InsightCard({ title, value, subtitle, icon: Icon, color }: InsightCardP
   };
 
   return (
-    <Card className="group relative overflow-hidden border-none bg-card/50 backdrop-blur-md transition-all hover:bg-card/80 shadow-sm rounded-3xl">
-      <CardContent className="p-5 @sm:p-6">
-        {/* Fluid Layout: 
-          @sm (container width > 384px) par ye side-by-side hoga, 
-          warna stacked (center aligned) dikhega.
-        */}
+    <Card className="hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group relative overflow-hidden border-none bg-card/50 backdrop-blur-md transition-all hover:bg-card/80 shadow-sm rounded-3xl">
+      <CardContent className="p-5 @sm:p-6 ">
+       
         <div className="flex flex-col @sm:flex-row items-center @sm:items-start gap-4 text-center @sm:text-left">
           <div className={cn(
             "shrink-0 p-3 rounded-2xl border transition-transform group-hover:scale-110", 

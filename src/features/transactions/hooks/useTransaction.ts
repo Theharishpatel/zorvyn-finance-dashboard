@@ -14,6 +14,8 @@ import { Table } from "@tanstack/react-table";
 import { Transaction } from "@/features/transactions/types";
 import { format } from "date-fns"
 import { getTransactions } from "../api/getTransactions.ts";
+import { toast } from "sonner";
+
 
 // --- 1. TERA ORIGINAL EXPORT LOGIC (UNCHANGED) ---
 export const useTransactionExport = <TData>(table: Table<TData>) => {
@@ -37,8 +39,20 @@ export function useTransactionTable(columns: ColumnDef<Transaction, any>[], init
 
   // Helper function to sync state and localStorage
   const updateData = (newData: Transaction[]) => {
-    setData(newData);
-    localStorage.setItem("zorvyn_transactions", JSON.stringify(newData));
+    try {
+      setData(newData);
+      localStorage.setItem("zorvyn_transactions", JSON.stringify(newData));
+      
+      // SUCCESS TOAST
+      toast.success("Changes Saved", {
+        description: "Transaction list has been updated successfully.",
+      });
+    } catch (error) {
+      // ERROR TOAST
+      toast.error("Update Failed", {
+        description: "Unable to save changes. Please check your connection.",
+      });
+    }
   };
 
   React.useEffect(() => {

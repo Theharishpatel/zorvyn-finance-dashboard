@@ -48,9 +48,9 @@ export function DataTablePagination<TData>({
             <SelectTrigger className="h-8 w-[65px] md:w-[70px] bg-muted/40 border-none text-[11px] md:text-xs hover:bg-muted/60 transition-colors">
               <SelectValue placeholder={pageSize} />
             </SelectTrigger>
-            <SelectContent side="top" className="min-w-[70px]">
+            <SelectContent side="top" className="min-w-[70px] backdrop-blur-xl">
               {pageSizeOptions.map((size) => (
-                <SelectItem key={size} value={`${size}`} className="text-xs">
+                <SelectItem key={size} value={`${size}`} className="text-xs ">
                   {size}
                 </SelectItem>
               ))}

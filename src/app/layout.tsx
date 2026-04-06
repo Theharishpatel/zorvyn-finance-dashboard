@@ -6,6 +6,8 @@ import "./globals.css";
 import { Sidebar } from "../components/shared/sidebar";
 import { MobileHeader } from "@/components/shared/mobileHeader";
 import { ThemeProvider } from "@/components/themeProvider";
+import { DashboardHeader } from "@/components/shared/headerDashboard";
+import { Toaster } from "@/components/ui/sonner";
 
 // 1. FONTS CONFIGURATION
 const geistSans = Geist({
@@ -65,7 +67,9 @@ export default function RootLayout({
               {/* CONTENT AREA: Scrollable with proper padding */}
               <section className="flex-1 overflow-y-auto outline-none scroll-smooth p-4 md:p-8 lg:p-10">
                 <div className="mx-auto max-w-7xl w-full">
+                  <DashboardHeader />
                   {children}
+                  <Toaster position="top-center" richColors closeButton />
                 </div>
               </section>
               

@@ -1,9 +1,10 @@
-"use client"
+"use client";
 
-import { ColumnDef } from "@tanstack/react-table"
-import { Badge } from "@/components/ui/badge"
-import { Transaction } from "@/types"
-import { TransactionCell, AmountCell, InsightsCell } from "./cellComponents"
+import { ColumnDef } from "@tanstack/react-table";
+import { Badge } from "@/components/ui/badge";
+import { Transaction } from "@/features/transactions/types";
+import { TransactionCell, AmountCell, InsightsCell } from "./cellComponents";
+import { RowActions } from "./rowActions";
 
 export const columns: ColumnDef<Transaction>[] = [
   {
@@ -11,7 +12,7 @@ export const columns: ColumnDef<Transaction>[] = [
     header: () => <span className="pl-2">Transaction</span>,
     cell: ({ row }) => <TransactionCell {...row.original} />,
     // Merchant column thoda bada rakhenge kyunki isme icon + text hai
-    size: 280, 
+    size: 280,
     minSize: 200,
   },
   {
@@ -60,8 +61,10 @@ export const columns: ColumnDef<Transaction>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <Badge 
-        variant={row.getValue("status") === "Completed" ? "outline" : "secondary"} 
+      <Badge
+        variant={
+          row.getValue("status") === "Completed" ? "outline" : "secondary"
+        }
         className="text-[9px] md:text-[10px] uppercase font-bold tracking-tighter"
       >
         {row.getValue("status")}
@@ -69,4 +72,10 @@ export const columns: ColumnDef<Transaction>[] = [
     ),
     size: 100,
   },
-]
+  {
+    id:"action",
+    header:()=><span className="sr-only">Actions</span>,
+    cell: ({row, table}) => <RowActions row={row} table={table}/>,
+    size: 100,
+  },
+];
